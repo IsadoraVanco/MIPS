@@ -25,62 +25,45 @@ main:
     # $s1 = soma dos negativos
     add $s1, $zero, $zero
     # $s2 = contador
-    addi $s2, $zero, 7
-    # $s7 = 1
-    addi $s7, $zero, 1
-
+    addi $s2, $zero, 0
     # $s3 = ponteiro do vetor
     la $s3, vetor
+    # $s4 = fim do loop = número de elementos do vetor
+    addi $s4, $zero, 8
 
-    # for(int i = 0; i < 8; i++){ 
-    #    if(vetor[i] >= 0){
-    #        somaPositivos += vetor[i];
-    #    } else{
-    #        somaNegativos += vetor[i];
-    #    }
-    # }
+    loop: 
+        sll $t0, $s2, 2 # $t0 = 4 * contador
+        add $t0, $t0, $s3 # $t0 += &vetor
+        lw $t1, 0($t0) # $t1 = vetor[contador]
 
-    for: 
-        add $t0, $s2, $s2 # 2 * contador
-        add $t0, $t0, $t0 # $t0 = 4 * contador
+        slti $t2, $t1, 0 # if(vetor[contador] < 0){$t2 = 1: $t2 = 0}
+        beq $t2, $zero, adicionaPositivos #if($t2 = 0): adicionaPositivos
 
-        add $t1, $zero, $s3 # $t1 = vetor
-        add $t1, $t1, $t0 # $t1 += 4 * contador
-        lw $t2, 0($t1) # $t2 = *vetor[contador]
+        adicionaNegativos:
+            add $s1, $s1, $t1 # somanegativos += vetor[contador]
+            j incremento # Vai para o incremento
 
-        slti $t1, $t2, 0 #if (*vetor[contador] < 0){ $t1 = 1: $t1 = 0}
-        beq $t1, $zero, adicionapositivos #if($t1 = 0){go to adicionapositivos}
+        adicionaPositivos:
+            add $s0, $s0, $t1 #somapositivos += vetor[contador]
 
-        adicionanegativos:
-            add $s1, $s1, $t2 # somanegativos += *vetor[contador]
+        incremento:    	
+            addi $s2, $s2, 1 # contador++
+            beq $s2, $s4, exit #if(contador == fim do loop): exit
+            j loop # Vai para loop
 
-        decremento:    	
-            sub $s2, $s2, $s7 # contador--
-            slti $t0, $s2, 0 # if(contador < 0){$t0 = 1: $t0 = 0}
-            beq $t0, $zero, for #if($t0 == 0){go to for}
-            j fim #jump to fim
+exit:
+    li $v0, 4 # Configura o syscall para escrever strings
+    la $a0, positivos # Configura o argumento para a chamada
+    syscall # Print(positivos)
 
-        adicionapositivos:
-            add $s0, $s0, $t2 #somapositivos += *vetor[contador]
-            j decremento
+    li $v0, 1 # Configura o syscall para escrever inteiros
+    add $a0, $zero, $s0 # Configura o argumento para a chamada
+    syscall # Print($s0)
 
-fim:
-    # Configura o syscall para escrever strings
-    li $v0, 4
-    la $a0, positivos
-    syscall
+    li $v0, 4 # Configura o syscall para escrever strings
+    la $a0, negativos # Configura o argumento para a chamada
+    syscall # Print(negativos)
 
-    # Configura o syscall para escrever inteiros
-    li $v0, 1
-    add $a0, $zero, $s0 #Printa a soma de positivos
-    syscall
-
-    # Configura o syscall para escrever strings
-    li $v0, 4
-    la $a0, negativos
-    syscall
-
-    # Configura o syscall para escrever inteiros
-    li $v0, 1
-    add $a0, $zero, $s1 #Printa a soma de negativos
-    syscall
+    li $v0, 1 # Configura o syscall para escrever inteiros
+    add $a0, $zero, $s1 # Configura o argumento para a chamada
+    syscall # Print($s1)

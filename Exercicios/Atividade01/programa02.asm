@@ -58,7 +58,6 @@ main:
 
         j loop
 
-
 leValorA:
     # Configura o syscall para escrever strings
     li $v0, 4
