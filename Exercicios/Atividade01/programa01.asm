@@ -1,14 +1,16 @@
-# 1) Elaborar um programa, em código MIPS, que realize a soma dos valores
+# 1. Elaborar um programa, em código MIPS, que realize a soma dos valores
 # positivos e a soma dos valores negativos contidos em um vetor, na forma:
 
 # .data
 # vetor: .word -2, 4, 7, -3, 0, -3, 5, 6
 # .......
-# Layout de saída
+
+# Layout de saída:
 # A soma dos valores positivos =
 # A soma dos valores negativos =
 
 # Obs. Enviar o fonte (comentado) - programa01.asm
+# Aluna: Isadora Vanço
 
 .data 
 vetor: .word -2, 4, 7, -3, 0, -3, 5, 6
