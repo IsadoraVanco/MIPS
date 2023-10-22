@@ -51,50 +51,48 @@ main:
         j exit # Vai para exit
 
 leValorA:
-    # Configura o syscall para escrever strings
-    li $v0, 4
-    la $a0, valorA
+    li $v0, 4 # Configura o syscall para escrever strings
+    la $a0, valorA # Configura o argumento da função
     syscall # Print(valorA)
 
-    # Configura o syscall para ler inteiros
-    li $v0, 5 
+    li $v0, 5 # Configura o syscall para ler inteiros
     syscall # O número lido vai ficar em v0
+
     jr $ra # Volta para depois da chamada da função
 
 leValorB:
-    # Configura o syscall para escrever strings
-    li $v0, 4
-    la $a0, valorB
+    li $v0, 4 # Configura o syscall para escrever strings
+    la $a0, valorB # Configura o argumento da função
     syscall # Print(valorB)
 
-    # Configura o syscall para ler inteiros
-    li $v0, 5 
+    li $v0, 5 # Configura o syscall para ler inteiros
     syscall # O número lido vai ficar em v0
+    
     jr $ra # Volta para depois da chamada da função
 
 erro:
-    # Configura o syscall para escrever strings
-    li $v0, 4
-    la $a0, erroNegativos
+    li $v0, 4 # Configura o syscall para escrever strings
+    la $a0, erroNegativos # Configura o argumento da função
     syscall # Print(erroNegativos)
 
-    j exit
+    j exit # Vai para exit
 
 printMultiplos:
-    # Configura o syscall para escrever strings
-    li $v0, 4
-    la $a0, multiplos
+    li $v0, 4 # Configura o syscall para escrever strings
+    la $a0, multiplos # Configura o argumento da função
     syscall # Print(multiplos)
+    
     jr $ra # Volta para depois da chamada da função
 
 printNumero:
     # O número foi passado pelo parametro $a0
     li $v0, 1 # Configura o syscall para escrever inteiros
-    syscall # Print()
+    syscall # Print($a0)
 
     li $v0, 4 # Configura o syscall para escrever strings
-    la $a0, ln # Configura o argumento para a chamada de sistema
+    la $a0, ln # Configura o argumento da função
     syscall # Print(ln)
+    
     jr $ra # Volta para depois da chamada da função
 
 exit:
