@@ -9,7 +9,8 @@
 # A soma dos valores positivos =
 # A soma dos valores negativos =
 
-# Obs. Enviar o fonte (comentado) - programa01.asm
+# OBS: Enviar o fonte (comentado) - programa01.asm
+
 # Aluna: Isadora Vanço
 
 .data 
