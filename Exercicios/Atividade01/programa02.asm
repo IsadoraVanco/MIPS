@@ -36,27 +36,19 @@ main:
     mul $s1, $s1, $s0 # B = B * A
 
     # $s2 = contador 
-    add $s2, $zero, $s0 # contador = A
-
-    # $s3 = fim
-    addi $s3, $s1, 1 # fim = B + 1
+    add $s2, $zero, $zero # contador = 0
 
     jal printMultiplos # Imprime a frase de múltiplos
     
     loop:
-        # Verifica se é múltiplo
-        div $s2, $s0 # contador % A
-        mfhi $t0 # $t0 = resto da divisão feita
-        bne $t0, $zero, incremento # if($t0 != 0): incremento
+        add $s2, $s2, $s0 # contador += A
         
         add $a0, $zero, $s2 # Configura o argumento para a função de print
         jal printNumero # Printa o número múltiplo
 
-        incremento:
-            addi $s2, $s2, 1 # contador++
-            beq $s2, $s3, exit # if(contador == fim): exit
-
-        j loop
+        slt $t0, $s2, $s1 # if(contador < B*A){$t0 = 1: $t0 = 0}
+        bne $t0, $zero, loop # if($t0 != 0): loop
+        j exit # Vai para exit
 
 leValorA:
     # Configura o syscall para escrever strings
