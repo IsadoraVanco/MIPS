@@ -65,14 +65,14 @@ main:
         bne $s2, $s0, numeroNaoPerfeito # if(soma != n): numeroNaoPerfeito
 
         numeroPerfeito:
-            la $a0, ehPerfeito
-            jal print
-            j exit
+            la $a0, ehPerfeito # Configura o argumento para a chamada da função
+            jal print # Chama a função print
+            j exit # Vai para exit
 
         numeroNaoPerfeito:
-            la $a0, naoPerfeito
-            jal print
-            j exit
+            la $a0, naoPerfeito # Configura o argumento para a chamada da função 
+            jal print # Chama a função print
+            j exit # Vai para exit
     
 leValor:
     li $v0, 4 # Configura o syscall para escrever strings

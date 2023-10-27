@@ -75,7 +75,7 @@ main:
     add $a0, $zero, $s1 # Passa a soma como parâmetro para a função
     jal printSoma # Vai para o print
 
-    j exit
+    j exit # Vai para exit
 
 scanf:
     li $v0, 4 # Configura o syscall para escrever strings
@@ -126,7 +126,7 @@ storeValues:
     # $t0 = i
     add $t0, $zero, $zero # i = 0
     # $t1 = *squares
-    la $t1, squares
+    la $t1, squares # $t1 = &squares
 
     loopStore:
         beq $t0, $a0, return # if(i == $a0): return
@@ -150,7 +150,7 @@ computeSum:
     # $t0 = i
     add $t0, $zero, $zero # i = 0
     # $t1 = *squares
-    la $t1, squares
+    la $t1, squares # $t1 = &squares
     # $t2 = sum
     add $t2, $zero, $zero # sum = 0
 
