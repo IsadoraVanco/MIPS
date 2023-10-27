@@ -1,3 +1,4 @@
+# Slide 27
 # Código C:
 # while (save[i] == k){
 #     i += 1;

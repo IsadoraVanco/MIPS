@@ -1,3 +1,4 @@
+# Slide 41
 # Implementar em código MIPS: 
 # Somatório (k = 1 a 20)(4k + 2)
 

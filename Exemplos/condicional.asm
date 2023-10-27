@@ -1,3 +1,4 @@
+# Slide 24
 # Código C: 
 # if (i==j) {
 #     f = g+h;
