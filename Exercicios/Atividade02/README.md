@@ -22,8 +22,8 @@ int computeSum(int n) {
     sum = 0;
     for (i = 0; i < n ; i++){
         sum += squares [i];
-        return sum;
     }
+    return sum;
 }
 
 int main () {
