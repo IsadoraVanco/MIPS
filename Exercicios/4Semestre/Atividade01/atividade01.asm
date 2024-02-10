@@ -28,11 +28,13 @@ str5: .asciiz "\n\n5) Intervalo:\n"
 chaveInteira: .asciiz "Insira uma chave inteira: "
 strIntervalo: .asciiz "Números que estão entre ("
 strIntervalo2: .asciiz " , "
-strIntervalo3: .asciiz ")\n"
 chavePositiva: .asciiz "A chave deve ser maior que 1!\n"
 str6: .asciiz "\n\n6) Iguais:\n"
+totalRepeticoes: .asciiz "Total de repetições do número ("
 str7: .asciiz "\n7) Soma dos perfeitos e semiprimos:\n"
 total: .asciiz "\nTotal: "
+fechaPar: .asciiz "): "
+barraN: .asciiz "\n"
 
 .align 2
 vet: .space 480                 # 4 Bytes cada inteiro (12 números)
@@ -85,12 +87,16 @@ main:
 
     # Intervalo entre k e 2k
     la $a0, vet                 # $a0 = &vet
-    jal intervalo               # Verifica os números
+    jal intervalo               # Verifica os números do intervalo
 
     # Print passo 6)
     la $a0, str6                # String do parametro da função
     li $v0, 4                   # Escrever strings
     syscall                     # prinf(string)
+
+    # Verifica iguais
+    la $a0, vet                 # $a0 = &vet
+    jal iguais                  # Verifica os número iguais a chaveK
 
     # Print passo 7)
     la $a0, str7                # String do parametro da função
@@ -234,7 +240,7 @@ intervalo:
     # $t3 = soma
     addi $t3, $zero, 0          # $t3 = 0
 
-    lli:
+    llit:
         # Lê uma chave 
         la $a0, chaveInteira    # $a0 = &chaveInteira
         li $v0, 4               # Escrever strings
@@ -243,22 +249,22 @@ intervalo:
         syscall                 # scanf(vetor[i])
 
         # Se a chave k <= 1, lê de novo
-        bgt $v0, 1, i           # if($v0 > 1): goto i
+        bgt $v0, 1, it           # if($v0 > 1): goto it
 
-        # Prinf("A chave deve ser positiva!\n")
+        # Prinf("A chave deve ser maior que 1!\n")
         la $a0, chavePositiva   # $a0 = &chavePositiva
         li $v0, 4               # Escrever strings
         syscall                 # prinf(chavePositiva)
         
-        j lli                   # goto lli
+        j llit                  # goto llit
     
-    i: 
+    it: 
         # $t4 = chaveK
         move $t4, $v0           # $t4 = $v0 (valor lido)
         # $t5 = 2*chaveK
         sll $t5, $t4, 1         # $t5 = 2 * $t4
 
-        # Prinf("Números que estão no intervalo de %d a %d:\n", chaveK, chaveK * 2)
+        # Prinf("Números que estão no intervalo de (%d , %d): \n", chaveK, chaveK * 2)
         la $a0, strIntervalo    # $a0 = &strIntervalo
         li $v0, 4               # Escrever strings
         syscall                 # prinf(strIntervalo)
@@ -271,17 +277,20 @@ intervalo:
         move $a0, $t5           # $a0 = 2*chaveK
         li $v0, 1               # Escrever inteiros
         syscall                 # prinf(chaveK)
-        la $a0, strIntervalo3   # $a0 = &strIntervalo3
+        la $a0, fechaPar        # $a0 = &fechaPar
         li $v0, 4               # Escrever strings
-        syscall                 # prinf(strIntervalo3)
+        syscall                 # prinf(fechaPar)
+        la $a0, barraN          # $a0 = &barraN
+        li $v0, 4               # Escrever strings
+        syscall                 # prinf(barraN)
 
     lIntervalo:
         # $t6 = vetor[i]
         lw $t6, ($t1)           # $t6 = $t1
 
         # Verifica se está no intervalo (k, 2k)
-        ble $t6, $t4, lii       # if(vetor[i] <= chaveK): goto lii
-        bge $t6, $t5, lii       # if(vetor[i] >= 2*chaveK): goto lii
+        ble $t6, $t4, liit      # if(vetor[i] <= chaveK): goto liit
+        bge $t6, $t5, liit      # if(vetor[i] >= 2*chaveK): goto liit
 
         # Printf("%d ", vetor[i]);
         lw $a0, ($t1)           # $a0 = vetor[i]
@@ -293,7 +302,7 @@ intervalo:
 
         addi $t3, $t3, 1        # soma++
 
-    lii:
+    liit:
         # i++
         add $t1, $t1, 4         # &vetor[i + 1]
         addi $t2, $t2, 1        # i++
@@ -307,6 +316,64 @@ intervalo:
         move $a0, $t3           # $a0 = soma
         li $v0, 1               # Escrever inteiros
         syscall                 # prinf(soma)
+
+        # Return &vetor;
+        move $v0, $t0           # $v0 = &vetor
+        jr $ra                  # Retorna para a main
+
+# Verifica quantos números iguais a chave K há no vetor
+iguais:
+    # $t0 = &vet
+    move $t0, $a0               # $t0 = $a0
+    # $t1 = $vetor[i]
+    move $t1, $t0               # $t1 = $t0
+    # $t2 = i
+    li $t2, 0                   # $t2 = 0
+    # $t3 = soma
+    addi $t3, $zero, 0          # $t3 = 0
+    
+    # Lê uma chave 
+    la $a0, chaveInteira        # $a0 = &chaveInteira
+    li $v0, 4                   # Escrever strings
+    syscall                     # prinf(chaveInteira)
+    li $v0, 5                   # Ler inteiros
+    syscall                     # scanf(vetor[i])
+
+    # $t4 = chaveK
+    move $t4, $v0               # $t4 = $v0 (valor lido)
+    
+    lIguais:
+        # $t5 = vetor[i]
+        lw $t5, ($t1)           # $t5 = $t1
+
+        # Verifica se o número é igual à chave K
+        bne $t5, $t4, liig      # if(vetor[i] != chaveK): goto liig
+
+        addi $t3, $t3, 1        # soma++
+
+    liig:
+        # i++
+        add $t1, $t1, 4         # &vetor[i + 1]
+        addi $t2, $t2, 1        # i++
+
+        blt $t2, 12, lIguais    # if(i < 12): goto lIguais
+
+        # printf("Total de repetições do número (%d): %d\n", chaveK, soma)
+        la $a0, totalRepeticoes # $a0 = totalRepeticoes
+        li $v0, 4               # Escrever strings
+        syscall                 # prinf(totalRepeticoes)
+        move $a0, $t4           # $a0 = chaveK
+        li $v0, 1               # Escrever inteiros
+        syscall                 # prinf(chaveK)
+        la $a0, fechaPar        # $a0 = fechaPar
+        li $v0, 4               # Escrever strings
+        syscall                 # prinf(fechaPar)
+        move $a0, $t3           # $a0 = soma
+        li $v0, 1               # Escrever inteiros
+        syscall                 # prinf(soma)
+        la $a0, barraN          # $a0 = barraN
+        li $v0, 4               # Escrever strings
+        syscall                 # prinf(barraN)
 
         # Return &vetor;
         move $v0, $t0           # $v0 = &vetor
