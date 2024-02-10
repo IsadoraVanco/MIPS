@@ -23,6 +23,7 @@ void ordena(int *vetor){
     // qual algoritmo utilizar?
 
     //quick => precisa de recursão e pode ser que n fique legal no mips
+    //bubble => um pouco lento
 }
 
 void somaPares(int *vetor){
