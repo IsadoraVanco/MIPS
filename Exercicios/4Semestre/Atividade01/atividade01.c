@@ -66,6 +66,12 @@ void iguais(int *vetor){
     printf("Insira uma chave inteira: ");
     scanf("%d", &chaveK);
 
+    while(chaveK < 0){
+        printf("A chave deve ser maior que 1!\n");
+        printf("Insira uma chave inteira: ");
+        scanf("%d", &chaveK);
+    }
+
     for(int i = 0; i < TAMANHO_VETOR; i++){
         if(vetor[i] == chaveK){
             soma++;

@@ -29,6 +29,7 @@ chaveInteira: .asciiz "Insira uma chave inteira: "
 strIntervalo: .asciiz "Números que estão entre ("
 strIntervalo2: .asciiz " , "
 strIntervalo3: .asciiz ")\n"
+chavePositiva: .asciiz "A chave deve ser maior que 1!\n"
 str6: .asciiz "\n\n6) Iguais:\n"
 str7: .asciiz "\n7) Soma dos perfeitos e semiprimos:\n"
 total: .asciiz "\nTotal: "
@@ -180,9 +181,13 @@ somaPares:
     addi $t4, $zero, 2          # $t4 = 2
 
     lPares:
-        # Verifica se é par
         # $t5 = vetor[i]
         lw $t5, ($t1)           # $t5 = $t1
+        
+        # Verifica se é 0
+        beq $t5, 0, lpi         # if(vetor[i] == 0): goto lpi
+
+        # Verifica se é par
         div $t5, $t4            # vetor[i] / 2
         # $t6 = resto da divisão
         mfhi $t6                # $t6 = vetor[i] % 2
@@ -229,34 +234,46 @@ intervalo:
     # $t3 = soma
     addi $t3, $zero, 0          # $t3 = 0
 
-    # Lê uma chave 
-    la $a0, chaveInteira        # $a0 = &chaveInteira
-    li $v0, 4                   # Escrever strings
-    syscall                     # prinf(ent)
-    li $v0, 5                   # Ler inteiros
-    syscall                     # scanf(vetor[i])
-    
-    # $t4 = chaveK
-    move $t4, $v0               # $t4 = $v0 (valor lido)
-    # $t5 = 2*chaveK
-    sll $t5, $t4, 1             # $t5 = 2 * $t4
+    lli:
+        # Lê uma chave 
+        la $a0, chaveInteira    # $a0 = &chaveInteira
+        li $v0, 4               # Escrever strings
+        syscall                 # prinf(ent)
+        li $v0, 5               # Ler inteiros
+        syscall                 # scanf(vetor[i])
 
-    # Prinf("Números que estão no intervalo de %d a %d:\n", chaveK, chaveK * 2)
-    la $a0, strIntervalo        # $a0 = &strIntervalo
-    li $v0, 4                   # Escrever strings
-    syscall                     # prinf(strIntervalo)
-    move $a0, $t4               # $a0 = chaveK
-    li $v0, 1                   # Escrever inteiros
-    syscall                     # prinf(chaveK)
-    la $a0, strIntervalo2       # $a0 = &strIntervalo2
-    li $v0, 4                   # Escrever strings
-    syscall                     # prinf(strIntervalo2)
-    move $a0, $t5               # $a0 = 2*chaveK
-    li $v0, 1                   # Escrever inteiros
-    syscall                     # prinf(chaveK)
-    la $a0, strIntervalo3       # $a0 = &strIntervalo3
-    li $v0, 4                   # Escrever strings
-    syscall                     # prinf(strIntervalo3)
+        # Se a chave k <= 1, lê de novo
+        bgt $v0, 1, i           # if($v0 > 1): goto i
+
+        # Prinf("A chave deve ser positiva!\n")
+        la $a0, chavePositiva   # $a0 = &chavePositiva
+        li $v0, 4               # Escrever strings
+        syscall                 # prinf(chavePositiva)
+        
+        j lli                   # goto lli
+    
+    i: 
+        # $t4 = chaveK
+        move $t4, $v0           # $t4 = $v0 (valor lido)
+        # $t5 = 2*chaveK
+        sll $t5, $t4, 1         # $t5 = 2 * $t4
+
+        # Prinf("Números que estão no intervalo de %d a %d:\n", chaveK, chaveK * 2)
+        la $a0, strIntervalo    # $a0 = &strIntervalo
+        li $v0, 4               # Escrever strings
+        syscall                 # prinf(strIntervalo)
+        move $a0, $t4           # $a0 = chaveK
+        li $v0, 1               # Escrever inteiros
+        syscall                 # prinf(chaveK)
+        la $a0, strIntervalo2   # $a0 = &strIntervalo2
+        li $v0, 4               # Escrever strings
+        syscall                 # prinf(strIntervalo2)
+        move $a0, $t5           # $a0 = 2*chaveK
+        li $v0, 1               # Escrever inteiros
+        syscall                 # prinf(chaveK)
+        la $a0, strIntervalo3   # $a0 = &strIntervalo3
+        li $v0, 4               # Escrever strings
+        syscall                 # prinf(strIntervalo3)
 
     lIntervalo:
         # $t6 = vetor[i]
