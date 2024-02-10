@@ -50,7 +50,7 @@ void intervalo(int *vetor){
 
     printf("Números que estão no intervalo de %d a %d:\n", chaveK, chaveK * 2);
     for(int i = 0; i < TAMANHO_VETOR; i++){
-        if(vetor[i] >= chaveK && vetor[i] <= chaveK * 2){
+        if(vetor[i] > chaveK && vetor[i] < chaveK * 2){
             printf("%d ", vetor[i]);
             soma++;
         }

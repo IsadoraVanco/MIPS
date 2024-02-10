@@ -24,189 +24,273 @@ ent2: .asciiz "]"
 str2: .asciiz "\n2) Mostra o vetor:\n"
 str3: .asciiz "\n\n3) Mostra o vetor ordenado:\n"
 str4: .asciiz "\n\n4) Soma os pares:\n"
-totalPares: .asciiz "\nTotal: "
 str5: .asciiz "\n\n5) Intervalo:\n"
-str6: .asciiz "6) Iguais:\n"
-str7: .asciiz "7) Soma dos perfeitos e semiprimos:\n"
+chaveInteira: .asciiz "Insira uma chave inteira: "
+strIntervalo: .asciiz "Números que estão entre ("
+strIntervalo2: .asciiz " , "
+strIntervalo3: .asciiz ")\n"
+str6: .asciiz "\n\n6) Iguais:\n"
+str7: .asciiz "\n7) Soma dos perfeitos e semiprimos:\n"
+total: .asciiz "\nTotal: "
 
 .align 2
-vet: .space 480             # 4 Bytes cada inteiro (12 números)
+vet: .space 480                 # 4 Bytes cada inteiro (12 números)
 
 .text
 .globl main 
 main:
     # Print passo 1)
-    la $a0, str1            # String do parametro da função
-    li $v0, 4               # Escrever strings
-    syscall                 # prinf(string)
+    la $a0, str1                # String do parametro da função
+    li $v0, 4                   # Escrever strings
+    syscall                     # prinf(string)
 
     # Leitura do vetor
-    la $a0, vet             # $a0 = &vet
-    jal leitura             # Lê o vetor (retorna o endereço do vetor)
+    la $a0, vet                 # $a0 = &vet
+    jal leitura                 # Lê o vetor (retorna o endereço do vetor)
     
     # Print passo 2)
-    la $a0, str2            # String do parametro da função
-    li $v0, 4               # Escrever strings
-    syscall                 # prinf(string)
+    la $a0, str2                # String do parametro da função
+    li $v0, 4                   # Escrever strings
+    syscall                     # prinf(string)
 
     # Escrita do vetor
-    la $a0, vet             # $a0 = &vet
-    jal escrita             # Escreve o vetor (retorna o endereço do vetor)
+    la $a0, vet                 # $a0 = &vet
+    jal escrita                 # Escreve o vetor (retorna o endereço do vetor)
     
     # Ordena o vetor
 
     # Print passo 3)
-    la $a0, str3            # String do parametro da função
-    li $v0, 4               # Escrever strings
-    syscall                 # prinf(string)
+    la $a0, str3                # String do parametro da função
+    li $v0, 4                   # Escrever strings
+    syscall                     # prinf(string)
 
     # Escrita do vetor ordenado
-    la $a0, vet             # $a0 = &vet
-    jal escrita             # Escreve o vetor (retorna o endereço do vetor)
+    la $a0, vet                 # $a0 = &vet
+    jal escrita                 # Escreve o vetor (retorna o endereço do vetor)
 
     # Print passo 4)
-    la $a0, str4            # String do parametro da função
-    li $v0, 4               # Escrever strings
-    syscall                 # prinf(string)
+    la $a0, str4                # String do parametro da função
+    li $v0, 4                   # Escrever strings
+    syscall                     # prinf(string)
 
     # Soma os pares do vetor
-    la $a0, vet             # $a0 = &vet
-    jal somaPares           # Soma os pares
+    la $a0, vet                 # $a0 = &vet
+    jal somaPares               # Soma os pares
 
     # Print passo 5)
-    la $a0, str5            # String do parametro da função
-    li $v0, 4               # Escrever strings
-    syscall                 # prinf(string)
+    la $a0, str5                # String do parametro da função
+    li $v0, 4                   # Escrever strings
+    syscall                     # prinf(string)
+
+    # Intervalo entre k e 2k
+    la $a0, vet                 # $a0 = &vet
+    jal intervalo               # Verifica os números
 
     # Print passo 6)
-    la $a0, str6            # String do parametro da função
-    li $v0, 4               # Escrever strings
-    syscall                 # prinf(string)
+    la $a0, str6                # String do parametro da função
+    li $v0, 4                   # Escrever strings
+    syscall                     # prinf(string)
 
     # Print passo 7)
-    la $a0, str7            # String do parametro da função
-    li $v0, 4               # Escrever strings
-    syscall                 # prinf(string)
+    la $a0, str7                # String do parametro da função
+    li $v0, 4                   # Escrever strings
+    syscall                     # prinf(string)
 
     # Fim :)
-    li $v0, 10              # Código para finalizar o programa
-    syscall                 # Finaliza o programa
+    li $v0, 10                  # Código para finalizar o programa
+    syscall                     # Finaliza o programa
 
 # Lê os valores que serão armazaenados no vetor
 leitura:
     # t0 = &vetor
-    move $t0, $a0           # $t0 = $a0 (&vet)
+    move $t0, $a0               # $t0 = $a0 (&vet)
     # vetor[i]
-    move $t1, $t0           # $t1 = $t0
+    move $t1, $t0               # $t1 = $t0
     # t2 = i
-    li $t2, 0               # $t2 = 0
+    li $t2, 0                   # $t2 = 0
 
     l:
         # Printf("Insira o valor de Vet[%d]", i);
-        la $a0, ent         # $a0 = &ent
-        li $v0, 4           # Escrever strings
-        syscall             # prinf(ent)
-        move $a0, $t2       # $a0 = $t2
-        li $v0, 1           # Escrever inteiros
-        syscall             # prinf($t2)
-        la $a0, ent2        # $a0 = &ent2
-        li $v0, 4           # Escrever strings
-        syscall             # prinf(ent2)
+        la $a0, ent             # $a0 = &ent
+        li $v0, 4               # Escrever strings
+        syscall                 # prinf(ent)
+        move $a0, $t2           # $a0 = $t2
+        li $v0, 1               # Escrever inteiros
+        syscall                 # prinf($t2)
+        la $a0, ent2            # $a0 = &ent2
+        li $v0, 4               # Escrever strings
+        syscall                 # prinf(ent2)
 
         # Scanf("%d", vetor[i]);
-        li $v0, 5           # Ler inteiros
-        syscall             # scanf(vetor[i])
-        sw $v0, ($t1)       # vetor[i] = $v0
+        li $v0, 5               # Ler inteiros
+        syscall                 # scanf(vetor[i])
+        sw $v0, ($t1)           # vetor[i] = $v0 (valor lido)
 
         # i++;
-        add $t1, $t1, 4     # &vetor[i + 1]
-        addi $t2, $t2, 1    # i++
+        add $t1, $t1, 4         # &vetor[i + 1]
+        addi $t2, $t2, 1        # i++
 
-        blt $t2, 12, l      # if(i < 12): goto l
+        blt $t2, 12, l          # if(i < 12): goto l
 
         # Return &vetor;
-        move $v0, $t0       # $v0 = &vetor
-        jr $ra              # Retorna para a main
+        move $v0, $t0           # $v0 = &vetor
+        jr $ra                  # Retorna para a main
 
 # Escreve os valores armazenados no vetor
 escrita:
     # $t0 = &vet
-    move $t0, $a0           # $t0 = $a0
+    move $t0, $a0               # $t0 = $a0
     # $t1 = &vetor[i]
-    move $t1, $t0           # $t1 = $t0
+    move $t1, $t0               # $t1 = $t0
     # $t2 = i
-    li $t2, 0               # $t2 = 0
+    li $t2, 0                   # $t2 = 0
 
     e:
         # Printf("%d", vetor[i]);
-        lw $a0, ($t1)       # $a0 = vetor[i]
-        li $v0, 1           # Escrever inteiros
-        syscall             # printf(vetor[i])
+        lw $a0, ($t1)           # $a0 = vetor[i]
+        li $v0, 1               # Escrever inteiros
+        syscall                 # printf(vetor[i])
 
         # Printf(" ");
-        li $a0, 32          # Código ASCII para espaço
-        li $v0, 11          # Escrever caractere
-        syscall             # printf(" ")
+        li $a0, 32              # Código ASCII para espaço
+        li $v0, 11              # Escrever caractere
+        syscall                 # printf(" ")
 
         # i++
-        add $t1, $t1, 4     # &vetor[i + 1]
-        addi $t2, $t2, 1    # i++
+        add $t1, $t1, 4         # &vetor[i + 1]
+        addi $t2, $t2, 1        # i++
 
-        blt $t2, 12, e      # if(i < 12): goto e
+        blt $t2, 12, e          # if(i < 12): goto e
 
         # Return &vetor;
-        move $v0, $t0       # $v0 = &vetor
-        jr $ra              # Retorna para a main
+        move $v0, $t0           # $v0 = &vetor
+        jr $ra                  # Retorna para a main
 
 # Soma os pares do vetor e mostra o total
 somaPares:
     # $t0 = &vet
-    move $t0, $a0           # $t0 = $a0
+    move $t0, $a0               # $t0 = $a0
     # $t1 = $vetor[i]
-    move $t1, $t0           # $t1 = $t0
+    move $t1, $t0               # $t1 = $t0
     # $t2 = i
-    li $t2, 0               # $t2 = 0
+    li $t2, 0                   # $t2 = 0
     # $t3 = soma
-    addi $t3, $zero, 0      # $t3 = 0
+    addi $t3, $zero, 0          # $t3 = 0
     # $t4 = 2
-    addi $t4, $zero, 2      # $t4 = 2
+    addi $t4, $zero, 2          # $t4 = 2
 
     lPares:
         # Verifica se é par
         # $t5 = vetor[i]
-        lw $t5, ($t1)       # $t5 = $t1
-        div $t5, $t4          # vetor[i] / 2
+        lw $t5, ($t1)           # $t5 = $t1
+        div $t5, $t4            # vetor[i] / 2
         # $t6 = resto da divisão
-        mfhi $t6            # $t6 = vetor[i] % 2
+        mfhi $t6                # $t6 = vetor[i] % 2
 
-        bne $t6, $zero, lpi # if(vetor[i] % 2 != 0): goto lpi
-        add $t3, $t3, $t5   # soma += vetor[i]
+        bne $t6, $zero, lpi     # if(vetor[i] % 2 != 0): goto lpi
+        add $t3, $t3, $t5       # soma += vetor[i]
 
-        lw $a0, ($t1)       # $a0 = vetor[i]
-        li $v0, 1           # Escrever inteiros
-        syscall             # printf(vetor[i])
-
-        # Printf(" ");
-        li $a0, 32          # Código ASCII para espaço
-        li $v0, 11          # Escrever caractere
-        syscall             # printf(" ")
+        # Printf("%d ", vetor[i])
+        lw $a0, ($t1)           # $a0 = vetor[i]
+        li $v0, 1               # Escrever inteiros
+        syscall                 # printf(vetor[i])
+        li $a0, 32              # Código ASCII para espaço
+        li $v0, 11              # Escrever caractere
+        syscall                 # printf(" ")
 
     lpi:
         # i++
-        add $t1, $t1, 4     # &vetor[i + 1]
-        addi $t2, $t2, 1    # i++
+        add $t1, $t1, 4         # &vetor[i + 1]
+        addi $t2, $t2, 1        # i++
 
-        blt $t2, 12, lPares # if(i < 12): goto lPares
+        blt $t2, 12, lPares     # if(i < 12): goto lPares
 
         # Mostra o total
-        la $a0, totalPares  # $a0 = totalPares
-        li $v0, 4           # Escrever strings
-        syscall             # prinf(totalPares)
+        la $a0, total           # $a0 = total
+        li $v0, 4               # Escrever strings
+        syscall                 # prinf(total)
 
-        move $a0, $t3       # $a0 = soma
-        li $v0, 1           # Escrever inteiros
-        syscall             # prinf(soma)
+        move $a0, $t3           # $a0 = soma
+        li $v0, 1               # Escrever inteiros
+        syscall                 # prinf(soma)
 
         # Return &vetor;
-        move $v0, $t0       # $v0 = &vetor
-        jr $ra              # Retorna para a main
+        move $v0, $t0           # $v0 = &vetor
+        jr $ra                  # Retorna para a main
+
+# Verifica quais números do vetor estão entre k e 2k
+intervalo:
+    # $t0 = &vet
+    move $t0, $a0               # $t0 = $a0
+    # $t1 = $vetor[i]
+    move $t1, $t0               # $t1 = $t0
+    # $t2 = i
+    li $t2, 0                   # $t2 = 0
+    # $t3 = soma
+    addi $t3, $zero, 0          # $t3 = 0
+
+    # Lê uma chave 
+    la $a0, chaveInteira        # $a0 = &chaveInteira
+    li $v0, 4                   # Escrever strings
+    syscall                     # prinf(ent)
+    li $v0, 5                   # Ler inteiros
+    syscall                     # scanf(vetor[i])
+    
+    # $t4 = chaveK
+    move $t4, $v0               # $t4 = $v0 (valor lido)
+    # $t5 = 2*chaveK
+    sll $t5, $t4, 1             # $t5 = 2 * $t4
+
+    # Prinf("Números que estão no intervalo de %d a %d:\n", chaveK, chaveK * 2)
+    la $a0, strIntervalo        # $a0 = &strIntervalo
+    li $v0, 4                   # Escrever strings
+    syscall                     # prinf(strIntervalo)
+    move $a0, $t4               # $a0 = chaveK
+    li $v0, 1                   # Escrever inteiros
+    syscall                     # prinf(chaveK)
+    la $a0, strIntervalo2       # $a0 = &strIntervalo2
+    li $v0, 4                   # Escrever strings
+    syscall                     # prinf(strIntervalo2)
+    move $a0, $t5               # $a0 = 2*chaveK
+    li $v0, 1                   # Escrever inteiros
+    syscall                     # prinf(chaveK)
+    la $a0, strIntervalo3       # $a0 = &strIntervalo3
+    li $v0, 4                   # Escrever strings
+    syscall                     # prinf(strIntervalo3)
+
+    lIntervalo:
+        # $t6 = vetor[i]
+        lw $t6, ($t1)           # $t6 = $t1
+
+        # Verifica se está no intervalo (k, 2k)
+        ble $t6, $t4, lii       # if(vetor[i] <= chaveK): goto lii
+        bge $t6, $t5, lii       # if(vetor[i] >= 2*chaveK): goto lii
+
+        # Printf("%d ", vetor[i]);
+        lw $a0, ($t1)           # $a0 = vetor[i]
+        li $v0, 1               # Escrever inteiros1
+        syscall                 # printf(vetor[i])
+        li $a0, 32              # Código ASCII para espaço
+        li $v0, 11              # Escrever caractere
+        syscall                 # printf(" ")
+
+        addi $t3, $t3, 1        # soma++
+
+    lii:
+        # i++
+        add $t1, $t1, 4         # &vetor[i + 1]
+        addi $t2, $t2, 1        # i++
+
+        blt $t2, 12, lIntervalo # if(i < 12): goto lIntervalo
+
+        # Mostra o total
+        la $a0, total           # $a0 = total
+        li $v0, 4               # Escrever strings
+        syscall                 # prinf(total)
+        move $a0, $t3           # $a0 = soma
+        li $v0, 1               # Escrever inteiros
+        syscall                 # prinf(soma)
+
+        # Return &vetor;
+        move $v0, $t0           # $v0 = &vetor
+        jr $ra                  # Retorna para a main
