@@ -103,9 +103,6 @@ int ehPerfeito(int numero){
 }
 
 int ehPrimo(int numero){
-    if(numero < 0){
-        numero *= -1;
-    }
     if(numero == 0 || numero == 1){
         return 0;
     }
@@ -141,25 +138,25 @@ int ehSemiprimo(int numero){
 
 void perfeitos(int *vetor){
     int somaPerfeitos = 0;
-    int contPerfeitos = 0;
+    // int contPerfeitos = 0;
     int somaPrimos = 0;
-    int contPrimos = 0;
+    // int contPrimos = 0;
 
     for(int i = 0; i < TAMANHO_VETOR; i++){
 
         if(ehPerfeito(vetor[i])){
             somaPerfeitos += vetor[i];
-            contPerfeitos++;
-            printf("%d) Perfeito: %d\n", contPerfeitos, vetor[i]);
+            // contPerfeitos++;
+            printf("%d) Perfeito: %d\n", vetor[i]);
         }
         if(ehSemiprimo(vetor[i])){
             somaPrimos += vetor[i];
-            contPrimos++;
-            printf("%d) Semiprimos: %d\n",contPrimos, vetor[i]);
+            // contPrimos++;
+            printf("%d) Semiprimos: %d\n", vetor[i]);
         }
     }
-    printf("Soma dos %d númmeros perfeitos: %d\n", contPerfeitos, somaPerfeitos);
-    printf("Soma dos %d númmeros semiprimos: %d\n", contPrimos, somaPrimos);
+    printf("Soma dos númmeros perfeitos: %d\n", somaPerfeitos);
+    printf("Soma dos númmeros semiprimos: %d\n", somaPrimos);
     printf("=>Perfeitos - Semiprimos = %d\n", somaPerfeitos - somaPrimos);
 }
 
