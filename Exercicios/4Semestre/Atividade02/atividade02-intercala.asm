@@ -1,10 +1,9 @@
-# Atividade 02 - MIPS (2/2023)
+# 1. O código abaixo realiza a leitura de 2 strings (string1 e string2) 
+# de tamanho máximo de 100 caracteres. Complete o código desenvolvendo 
+# a função intercala (intercala o conteúdo da string 1 com o conteúdo 
+# da string 2 e armazena o resultado em string3) 
 
-Créditos ao profº Fábio Martins, autor dos exercícios.
-
-1. O código abaixo realiza a leitura de 2 strings (string1 e string2) de tamanho máximo de 100 caracteres. Complete o código desenvolvendo a função intercala (intercala o conteúdo da string 1 com o conteúdo da string 2 e armazena o resultado em string3).
-
-```
+# Aluna: Isadora Vanço
 .data
 ent1: .asciiz "Insira a string 1: "
 ent2: .asciiz "Insira a string 2: "
@@ -40,12 +39,10 @@ leitura:
     
     move $a0, $a1   # Endereço da string para leitura
     li $a1, 100     # Número máximo de caracteres
+    
     li $v0, 8       # Código de leitura da string
     syscall         # Faz a leitura da string
 
     jr $ra          # Retorna para a main
 
 intercala:
-```
-
-2. Elaborar um programa, em código MIPS, que faça a leitura de uma string ASCII e verifique se a mesma é um palíndromo (retorne 1 se for palíndromo e 0 se não for palíndromo).  
