@@ -1,4 +1,4 @@
-# Atividade 01 - MIPS 
+# Atividade 01 - MIPS (2/2023)
 
 Créditos ao profº Fábio Martins, autor dos exercícios.
 
