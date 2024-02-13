@@ -66,6 +66,8 @@ main:
     jal escrita                 # Escreve o vetor (retorna o endereço do vetor)
     
     # Ordena o vetor
+    la $a0, vet                 # $a0 = &vet
+    jal ordena
 
     # Print passo 3)
     la $a0, str3                # String do parametro da função
@@ -110,7 +112,7 @@ main:
 
     # Calcula a soma dos perfeitos e semiprimos
     la $a0, vet                 # $a0 = &vet
-    jal perfeitosPrimos                  # Verifica os números 
+    jal perfeitosPrimos         # Verifica os números 
 
     # Fim :)
     li $v0, 10                  # Código para finalizar o programa
@@ -182,6 +184,56 @@ escrita:
         move $v0, $t0           # $v0 = &vetor
         jr $ra                  # Retorna para a main
 
+# Ordena o vetor com o algoritmo Bubble Sort
+ordena:
+    # $t0 = &vet
+    move $t0, $a0               # $t0 = $a0
+    # $t2 = i
+    li $t2, 0                   # $t2 = 0
+    
+    liOrdena:
+        # $t1 = $vetor[j]
+        move $t1, $t0           # $t1 = $t0
+        # $t3 = j
+        li $t3,  0              # $t3 = 0
+
+        # $t4 = (tamanhoVetor - 1) - i
+        addi $t4, $zero, 11     # $t4 = 11
+        sub $t4, $t4, $t2       # $t4 = 11 - i
+
+        ljOrdena:
+            # $t5 = vetor[j]
+            lw $t5, ($t1)       # $t5 = &$t1
+
+            # $t6 = vetor[j + 1]
+            add $t6, $t1, 4     # $t6 = &vetor[j + 1]
+            lw $t6, ($t6)       # $t6 = vetor[j + 1]
+
+            ble $t5, $t6, ldOrdena      # if(vetor[j] <= vetor[j + 1]): goto ldOrdena
+
+            # $t7 = temp
+            move $t7, $t5       # temp = vetor[j]
+
+            sw $t6, ($t1)       # vetor[j] = vetor[j + 1]
+            add $t1, $t1, 4     # &vetor[j + 1]
+            sw $t7, ($t1)       # vetor[j + 1] = temp
+            sub $t1, $t1, 4     # &vetor[j]
+            
+            ldOrdena:
+
+                add $t1, $t1, 4         # &vetor[j + 1]
+                addi $t3, $t3, 1        # j++
+
+                blt $t3, $t4, ljOrdena  # if(j < (tamanhoVetor - 1) - i): goto ljOrdena
+
+        addi $t2, $t2, 1        # i++
+        blt $t2, 11, liOrdena   # if(i < 11): goto liOrdena
+
+    # Return &vetor;
+    move $v0, $t0               # $v0 = &vetor
+    jr $ra                      # Retorna para a main
+
+
 # Soma os pares do vetor e mostra o total
 somaPares:
     # $t0 = &vet
@@ -225,18 +277,18 @@ somaPares:
 
         blt $t2, 12, lPares     # if(i < 12): goto lPares
 
-        # Mostra o total
-        la $a0, total           # $a0 = total
-        li $v0, 4               # Escrever strings
-        syscall                 # prinf(total)
+    # Mostra o total
+    la $a0, total               # $a0 = total
+    li $v0, 4                   # Escrever strings
+    syscall                     # prinf(total)
 
-        move $a0, $t3           # $a0 = soma
-        li $v0, 1               # Escrever inteiros
-        syscall                 # prinf(soma)
+    move $a0, $t3               # $a0 = soma
+    li $v0, 1                   # Escrever inteiros
+    syscall                     # prinf(soma)
 
-        # Return &vetor;
-        move $v0, $t0           # $v0 = &vetor
-        jr $ra                  # Retorna para a main
+    # Return &vetor;
+    move $v0, $t0               # $v0 = &vetor
+    jr $ra                      # Retorna para a main
 
 # Verifica quais números do vetor estão entre k e 2k
 intervalo:
@@ -258,7 +310,7 @@ intervalo:
         syscall                 # scanf(vetor[i])
 
         # Se a chave k <= 1, lê de novo
-        bgt $v0, 1, it           # if($v0 > 1): goto it
+        bgt $v0, 1, it          # if($v0 > 1): goto it
 
         # Prinf("A chave deve ser maior que 1!\n")
         la $a0, chavePositiva   # $a0 = &chavePositiva
@@ -391,192 +443,192 @@ iguais:
 # Calcula a soma dos números perfeitos e números semiprimos
 perfeitosPrimos:
     # $s0 = &vet
-    move $s0, $a0                               # $s0 = $a0
+    move $s0, $a0               # $s0 = $a0
     # $s1 = &vetor[i]
-    move $s1, $s0                               # $s1 = $s0
+    move $s1, $s0               # $s1 = $s0
     # $s2 = i
-    li $s2, 0                                   # $s2 = 0
+    li $s2, 0                   # $s2 = 0
     # $s3 = somaPerfeitos
-    addi $s3, $zero, 0                          # $s3 = 0
+    addi $s3, $zero, 0          # $s3 = 0
     # $s4 = somaSemiprimos
-    addi $s4, $zero, 0                          # $s4 = 0        
+    addi $s4, $zero, 0          # $s4 = 0        
     
     # Loop principal
     loopPp:
         # $s7 = vetor[i]
-        lw $s7, ($s1)                           # $s7 = $s1
+        lw $s7, ($s1)           # $s7 = $s1
 
         # *********************************************************
         # Verifica se o número é perfeito
         lpp:    
             # Verifica se é menor que 1
-            ble $s7, 1, lps                     # if(vetor[i] <= 1): goto lps
+            ble $s7, 1, lps     # if(vetor[i] <= 1): goto lps
 
             # $t0 = somaMultiplos (todo número é multiplo de 1)
-            addi $t0, $zero, 1                  # $t0 = 1
+            addi $t0, $zero, 1  # $t0 = 1
             # $t1 = multiploAtual
-            sub $t1, $s7, 1                     # $t1 = vetor[i] - 1
+            sub $t1, $s7, 1     # $t1 = vetor[i] - 1
             
             # Loop principal dos perfeitos
             lPerfeitos:
-                blt $t1, 2, veSoma              # if(multiploAtual < 2): goto veSoma
+                blt $t1, 2, veSoma      # if(multiploAtual < 2): goto veSoma
 
                 # Verifica se é multiplo
-                div $s7, $t1                    # vetor[i] / multiploAtual
+                div $s7, $t1    # vetor[i] / multiploAtual
                 # $t2 = vetor[i] % multiploAtual
-                mfhi $t2                        # $t2 = vetor[i] % multiploAtual
+                mfhi $t2        # $t2 = vetor[i] % multiploAtual
 
-                bne $t2, $zero, dPerf           # if(vetor[i] % multiploAtual != 0): goto dPerf
-                add $t0, $t0, $t1               # somaMultiplos += multiploAtual
+                bne $t2, $zero, dPerf   # if(vetor[i] % multiploAtual != 0): goto dPerf
+                add $t0, $t0, $t1       # somaMultiplos += multiploAtual
 
                 # Vai para a verificação de semiprimos
-                blt $s7, $t0, lps               # if(vetor[i] < somaMultiplos): goto lps
+                blt $s7, $t0, lps       # if(vetor[i] < somaMultiplos): goto lps
 
                 # Decrementa o multiploAtual para o loop principal dos perfeitos
                 dPerf:
-                    subi $t1, $t1, 1            # multiploAtual--
-                    j lPerfeitos                # goto lPerfeitos
+                    subi $t1, $t1, 1    # multiploAtual--
+                    j lPerfeitos        # goto lPerfeitos
 
             # Fim do loop principal dos perfeitos
             veSoma:
                 # Vai para a verificação de semiprimos
-                bne $s7, $t0, lps               # if(vetor[i] != somaMultiplos): goto lps
+                bne $s7, $t0, lps       # if(vetor[i] != somaMultiplos): goto lps
 
-                add $s3, $s3, $s7               # somaPerfeitos += vetor[i]
+                add $s3, $s3, $s7       # somaPerfeitos += vetor[i]
 
                 # printf("\nPerfeito: %d", vetor[i])
-                la $a0, ehPerfeito              # $a0 = &ehPerfeito
-                li $v0, 4                       # Escrever strings
-                syscall                         # prinf(ehPerfeito)
-                move $a0, $s7                   # $a0 = vetor[i]
-                li $v0, 1                       # Escrever inteiros
-                syscall                         # prinf(vetor[i])
+                la $a0, ehPerfeito      # $a0 = &ehPerfeito
+                li $v0, 4       # Escrever strings
+                syscall         # prinf(ehPerfeito)
+                move $a0, $s7   # $a0 = vetor[i]
+                li $v0, 1       # Escrever inteiros
+                syscall         # prinf(vetor[i])
 
         # *********************************************************
         # Verifica se o número é semiprimo
         lps:
             # $t0 = |vetor[i]|
-            add $t0, $s7, $zero                 # $t0 = $s7
+            add $t0, $s7, $zero # $t0 = $s7
 
-            bge $t0, 0, lsa                     # if(vetor[i] >= 0): goto lsa
-            mul $t0, $t0, -1                    # vetor[i] *= -1
+            bge $t0, 0, lsa     # if(vetor[i] >= 0): goto lsa
+            mul $t0, $t0, -1    # vetor[i] *= -1
 
         lsa:
             # $t1 = multiploSemiprimo
-            sub $t1, $t0, 1                     # $t1 = vetor[i] - 1
+            sub $t1, $t0, 1     # $t1 = vetor[i] - 1
 
             # Loop principal dos Semiprimos
             lSemprimos:
                 # Se acabou o loop e não achou primos
-                blt $t1, 2, lppi                # if(multiploSemiprimo < 2): goto lppi
+                blt $t1, 2, lppi        # if(multiploSemiprimo < 2): goto lppi
 
                 # Verifica se é multiplo
-                div $t0, $t1                    # |vetor[i]| / multiploSemiprimo
+                div $t0, $t1    # |vetor[i]| / multiploSemiprimo
                 
                 # $t2 = |vetor[i]| % multiploSemiprimo
-                mfhi $t2                        # $t2 = |vetor[i]| % multiploSemiprimo
+                mfhi $t2        # $t2 = |vetor[i]| % multiploSemiprimo
 
-                bne $t2, $zero, dSemPr          # if(|vetor[i]| % multiploSemiprimo != 0): goto dSemPr
+                bne $t2, $zero, dSemPr  # if(|vetor[i]| % multiploSemiprimo != 0): goto dSemPr
                 
                 # *********************************************************
                 # Verifica se esse multiplo é primo
 
                 # $t3 = multiploPrimo
-                sub $t3, $t1, 1                 # $t3 = multiploSemiprimo - 1
+                sub $t3, $t1, 1 # $t3 = multiploSemiprimo - 1
                 
                 # Loop principal dos primos
                 lPrimos:
-                    blt $t3, 2, ehPrimo         # if(multiploPrimo < 2): goto ehPrimo
+                    blt $t3, 2, ehPrimo  # if(multiploPrimo < 2): goto ehPrimo
 
                     # Verifica se é multiplo
-                    div $s7, $t1                # multiploSemiprimo / multiploPrimo
+                    div $s7, $t1         # multiploSemiprimo / multiploPrimo
                     # $t4 = multiploSemiprimo % multiploPrimo
-                    mfhi $t4                    # $t4 = multiploSemiprimo % multiploPrimo
+                    mfhi $t4    # $t4 = multiploSemiprimo % multiploPrimo
 
                     # Não é primo
                     beq $t4, $zero, dSemPr      # if(multiploSemiprimo % multiploPrimo == 0): goto dSemPr
                     
-                    subi $t3, $t3, 1            # multiploPrimo--
-                    j lPrimos                   # goto lPrimos
+                    subi $t3, $t3, 1     # multiploPrimo--
+                    j lPrimos   # goto lPrimos
                 
                 # **********************************************************
                 # Verifica se o coeficiente é primo
                 ehPrimo:
-                    div $t0, $t1                # |vetor[i]| / multiploSemiprimo
+                    div $t0, $t1         # |vetor[i]| / multiploSemiprimo
                     # coeficiente = |vetor[i]| / multiploSemiprimo
-                    mflo $t4                    # $t4 = |vetor[i]| / multiploSemiprimo
+                    mflo $t4    # $t4 = |vetor[i]| / multiploSemiprimo
 
                     # $t3 = multiploPrimo
-                    sub $t3, $t4, 1             # $t3 = coeficiente - 1
+                    sub $t3, $t4, 1      # $t3 = coeficiente - 1
                     
                     # Loop principal dos primos2
                     lPrimos2:
                         blt $t3, 2, ehSemiPrimo # if(multiploPrimo < 2): goto ehSemiPrimo
 
                         # Verifica se é multiplo
-                        div $t4, $t3            # coeficiente / multiploPrimo
+                        div $t4, $t3     # coeficiente / multiploPrimo
                         # $t5 = coeficiente % multiploPrimo
-                        mfhi $t5                # $t5 = multiploSemiprimo % multiploPrimo
+                        mfhi $t5         # $t5 = multiploSemiprimo % multiploPrimo
 
                         # Não é primo
                         beq $t5, $zero, dSemPr  # if(multiploSemiprimo % multiploPrimo == 0): goto dSemPr
                         
-                        subi $t3, $t3, 1        # multiploPrimo--
-                        j lPrimos2              # goto lPrimos2
+                        subi $t3, $t3, 1 # multiploPrimo--
+                        j lPrimos2       # goto lPrimos2
 
 
             # **********************************************************
             # Decrementa o multiploSemiprimo
             dSemPr:
-                subi $t1, $t1, 1                # multiploSemiprimo--
-                j lSemprimos                    # goto lSemprimos    
+                subi $t1, $t1, 1         # multiploSemiprimo--
+                j lSemprimos    # goto lSemprimos    
 
             ehSemiPrimo:
-                add $s4, $s4, $s7               # somaSemiprimos += vetor[i]
+                add $s4, $s4, $s7        # somaSemiprimos += vetor[i]
 
-                la $a0, strEhsemiPrimo          # $a0 = &strEhsemiPrimo
-                li $v0, 4                       # Escrever strings
-                syscall                         # prinf(strEhsemiPrimo)
-                move $a0, $s7                   # $a0 = vetor[i]
-                li $v0, 1                       # Escrever inteiros
-                syscall    
+                la $a0, strEhsemiPrimo   # $a0 = &strEhsemiPrimo
+                li $v0, 4       # Escrever strings
+                syscall         # prinf(strEhsemiPrimo)
+                move $a0, $s7   # $a0 = vetor[i]
+                li $v0, 1       # Escrever inteiros
+                syscall         
 
     # *********************************************************
     # Fim do loop principal
     lppi:
         # i++
-        add $s1, $s1, 4                         # &vetor[i + 1]
-        addi $s2, $s2, 1                        # i++
+        add $s1, $s1, 4         # &vetor[i + 1]
+        addi $s2, $s2, 1        # i++
 
-        blt $s2, 12, loopPp                     # if(i < 12): goto loopPp
+        blt $s2, 12, loopPp     # if(i < 12): goto loopPp
 
         # printf("Soma dos númmeros perfeitos: %d", somaPerfeitos)
         la $a0, strSomaPerfeitos                # $a0 = strSomaPerfeitos
-        li $v0, 4                               # Escrever strings
-        syscall                                 # prinf(strSomaPerfeitos)
-        move $a0, $s3                           # $a0 = somaPerfeitos
-        li $v0, 1                               # Escrever inteiros
-        syscall                                 # prinf(somaPerfeitos)
+        li $v0, 4               # Escrever strings
+        syscall                 # prinf(strSomaPerfeitos)
+        move $a0, $s3           # $a0 = somaPerfeitos
+        li $v0, 1               # Escrever inteiros
+        syscall                 # prinf(somaPerfeitos)
 
         # printf("\nSoma dos númmeros semiprimos: %d\n", somaPrimos)
-        la $a0, strSomaPrimos                   # $a0 = strSomaPrimos
-        li $v0, 4                               # Escrever strings
-        syscall                                 # prinf(strSomaPrimos)
-        move $a0, $s4                           # $a0 = somaSemiprimos
-        li $v0, 1                               # Escrever inteiros
-        syscall                                 # prinf(somaSemiprimos)
+        la $a0, strSomaPrimos   # $a0 = strSomaPrimos
+        li $v0, 4               # Escrever strings
+        syscall                 # prinf(strSomaPrimos)
+        move $a0, $s4           # $a0 = somaSemiprimos
+        li $v0, 1               # Escrever inteiros
+        syscall                 # prinf(somaSemiprimos)
 
-        sub $t0, $s3, $s4                       # $t0 = somaPerfeitos - somaSemiprimos
+        sub $t0, $s3, $s4       # $t0 = somaPerfeitos - somaSemiprimos
         
         # printf("\n=>Perfeitos - Semiprimos = %d", somaPerfeitos - somaPrimos)
-        la $a0, strPerfPrimo                    # $a0 = strPerfPrimo
-        li $v0, 4                               # Escrever strings
-        syscall                                 # prinf(strPerfPrimo)
-        move $a0, $t0                           # $a0 = somaPerfeitos - somaSemiprimos
-        li $v0, 1                               # Escrever inteiros
-        syscall                                 # prinf(somaPerfeitos - somaSemiprimos)
+        la $a0, strPerfPrimo    # $a0 = strPerfPrimo
+        li $v0, 4               # Escrever strings
+        syscall                 # prinf(strPerfPrimo)
+        move $a0, $t0           # $a0 = somaPerfeitos - somaSemiprimos
+        li $v0, 1               # Escrever inteiros
+        syscall                 # prinf(somaPerfeitos - somaSemiprimos)
 
         # Return &vetor;
-        move $v0, $t0                           # $v0 = &vetor
-        jr $ra                                  # Retorna para a main
+        move $v0, $t0           # $v0 = &vetor
+        jr $ra                  # Retorna para a main
     

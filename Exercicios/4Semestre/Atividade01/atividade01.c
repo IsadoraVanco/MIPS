@@ -20,10 +20,18 @@ void escrita(int *vetor){
 }
 
 void ordena(int *vetor){
-    // qual algoritmo utilizar?
-
-    //quick => precisa de recursão e pode ser que n fique legal no mips
     //bubble => um pouco lento
+
+    int temp;
+    for(int i = 0; i < TAMANHO_VETOR - 1; i++){
+        for(int j = 0; j < TAMANHO_VETOR - i - 1; j++){
+            if(vetor[j] > vetor[j + 1]){
+                temp = vetor[j];
+                vetor[j] = vetor[j + 1];
+                vetor[j + 1] = temp;
+            }
+        }
+    }
 }
 
 void somaPares(int *vetor){
@@ -139,7 +147,7 @@ int ehSemiprimo(int numero){
 void perfeitos(int *vetor){
     int somaPerfeitos = 0;
     // int contPerfeitos = 0;
-    int somaPrimos = 0;
+    int somaSemiprimos = 0;
     // int contPrimos = 0;
 
     for(int i = 0; i < TAMANHO_VETOR; i++){
@@ -150,14 +158,14 @@ void perfeitos(int *vetor){
             printf("%d) Perfeito: %d\n", vetor[i]);
         }
         if(ehSemiprimo(vetor[i])){
-            somaPrimos += vetor[i];
+            somaSemiprimos += vetor[i];
             // contPrimos++;
             printf("%d) Semiprimos: %d\n", vetor[i]);
         }
     }
     printf("Soma dos númmeros perfeitos: %d\n", somaPerfeitos);
-    printf("Soma dos númmeros semiprimos: %d\n", somaPrimos);
-    printf("=>Perfeitos - Semiprimos = %d\n", somaPerfeitos - somaPrimos);
+    printf("Soma dos númmeros semiprimos: %d\n", somaSemiprimos);
+    printf("=>Perfeitos - Semiprimos = %d\n", somaPerfeitos - somaSemiprimos);
 }
 
 int main(int argc, char const *argv[])
