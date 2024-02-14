@@ -46,3 +46,71 @@ leitura:
     jr $ra          # Retorna para a main
 
 intercala:
+    # $s0 = '\0'
+    li $s0, 0
+    # $s1 = '\n'
+    li $s1, 10
+
+    # $t0 = i
+    li $t0, 0
+    # $t1 = str1
+    li $t1, 0
+    # $t2 = str2
+    li $t2, 0
+    # $t3 = &string1[str1]
+    move $t3, $a0
+    # $t4 = string2[str2]
+    move $t4, $a1
+
+    lIntercala:
+        # $t5 = string1[str1]
+        lw $t5, ($t3)
+
+        beq $t5, 0, fimStr1         # if(string1[str1] == '\0'): goto fimStr1
+        beq $t5, 10, fimStr1        # if(string1[str1] == '\n'): goto fimStr1
+
+        sw $t5, ($a2)               # string3[i] = string1[str1]
+        addi $t3, $t3, 1            # &string1[str1 + 1]
+        addi $a2, $a2, 1            # &string3[i + 1]
+        addi $t0, $t0, 1            # i++
+
+        j verificaStr2
+
+        fimStr1:
+            addi $t1, $zero, -1     # str1 = -1
+
+        verificaStr2:
+            # $t5 = string2[str2]
+            lw $t5, ($t4)
+
+            beq $t5, 0, fimStr2         # if(string2[str2] == '\0'): goto fimStr2
+            beq $t5, 10, fimStr2        # if(string2[str2] == '\n'): goto fimStr2
+
+            sw $t5, ($a2)               # string3[i] = string2[str2]
+            addi $t4, $t4, 1            # &string2[str1 + 1]
+            addi $a2, $a2, 1            # &string3[i + 1]
+            addi $t0, $t0, 1            # i++
+
+            j verificaFim
+
+            fimStr2:
+                addi $t1, $zero, -1     # str1 = -1
+
+        verificaFim:
+            blt $t0, 200, verificaFim2
+            j finaliza
+
+        verificaFim2:
+            beq $t1, -1, verificaFim2   # if(str1 == -1): goto verificaFim2
+            j lIntercala
+        
+        verificaFim3:
+            beq $t2, -1, finaliza   # if(str2 == -1): goto verificaFim3
+            j lIntercala
+
+        finaliza:
+            sw $s0, ($a2)               # string3[i] = '\0'
+            sub $a2, $a2, $t0
+            move $v0, $a2           # $v0 = &string3
+
+            jr $ra
