@@ -125,6 +125,7 @@ leitura:    # leitura(a0 = Endereço, a1 = nLinhas, a2 = nColunas)
 
         blt $t0, $a1, l             # if(i < nlin): goto l
 
+        li $t0, 0           # i = 0
         lw $ra, ($sp)               # Recupera o retorno para a main
         addi $sp, $sp, 4            # Libera o espaço na pilha
         move $v0, $a3               # Endereço base da matriz para retorno
