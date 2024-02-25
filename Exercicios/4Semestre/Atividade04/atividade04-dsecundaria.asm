@@ -1,27 +1,22 @@
-# 2. Elaborar um programa, em código MIPS, que realize a leitura 
-# de duas matrizes de números inteiro de ordem 4x4  e apresente 
-# como resposta:  
-# * quantos valores iguais estão na mesma posição em ambas as matrizes;  
-# * soma das posições (linha+coluna) de todos os elementos iguais 
-# que estão na mesma posição em ambas as matrizes.
+# 1. Em álgebra linear, a diagonal secundária de uma matriz A 
+# é a coleção das entradas Aij em que i + j é igual a n + 1 
+# (onde n é a ordem da matriz).  Elaborar um programa, em  
+# código  MIPS,  que  receba  como  entrada  uma  matriz  de  
+# inteiros  de  ordem    3x3  e apresente como saída todos os 
+# valores da matriz e a soma dos elementos da diagonal secundária.
 
 # Aluna: Isadora Vanço
 .data
 Ent1: .asciiz "["
 Ent2: .asciiz "]["
 Ent3: .asciiz "]: "
-strMatA: .asciiz "=> Lendo Matriz A:\n"
-strMatB: .asciiz "=> Lendo Matriz B:\n"
-strMostraA: .asciiz "\n=> Matriz A lida:\n"
-strMostraB: .asciiz "\n=> Matriz B lida:\n"
-strCompara: .asciiz "\n=> Compara as matrizes:\n"
-strIguais: .asciiz "\nElementos iguais em posições iguais: "
-strSoma: .asciiz "\nSoma das linhas e colunas iguais: "
+strMatA: .asciiz "=> Lendo a Matriz:\n"
+strMostraA: .asciiz "\n=> Matriz lida:\n"
+strSoma: .asciiz "\nSoma dos elementos da diagonal secundária: "
 
 
 .align 2
-MatA: .space 64                     # Matriz de inteiros 4x4 (4Bytes)
-MatB: .space 64                     # Matriz de inteiros 4x4 (4Bytes)
+MatA: .space 36                     # Matriz de inteiros 3x3 (4Bytes)
 
 .text
 .globl main
@@ -31,44 +26,21 @@ main:
     syscall                         # Imprime a string
 
     la $a0, MatA                    # Endereço base de MatA
-    li $a1, 4                       # Número de linhas
-    li $a2, 4                       # Número de colunas
+    li $a1, 3                       # Número de linhas
+    li $a2, 3                       # Número de colunas
     jal leitura                     # leitura(MatA, nlin, ncol)
-
-    la $a0, strMatB                 # Carrega o endereço da string
-    li $v0, 4                       # Código de impressão de string
-    syscall                         # Imprime a string
-
-    la $a0, MatB                    # Endereço base de MatB
-    li $a1, 4                       # Número de linhas
-    li $a2, 4                       # Número de colunas
-    jal leitura                     # leVetor(MatB, nlin, ncol)
 
     la $a0, strMostraA              # Carrega o endereço da string
     li $v0, 4                       # Código de impressão de string
     syscall                         # Imprime a string
 
     la $a0, MatA                    # Endereço da matriz lida
-    li $a1, 4                       # Número de linhas
-    li $a2, 4                       # Número de colunas
+    li $a1, 3                       # Número de linhas
+    li $a2, 3                       # Número de colunas
     jal escrita                     # escrita(MatA, nlin, ncol)
 
-    la $a0, strMostraB              # Carrega o endereço da string
-    li $v0, 4                       # Código de impressão de string
-    syscall                         # Imprime a string
-
-    la $a0, MatB                    # Endereço da matriz lida
-    li $a1, 4                       # Número de linhas
-    li $a2, 4                       # Número de colunas do vetor 
-    jal escrita                     # escrita(MatB, nlin, ncol)
-
-    la $a0, strCompara              # Carrega o endereço da string
-    li $v0, 4                       # Código de impressão de string
-    syscall                         # Imprime a string
-
-    li $a0, 4                       # Número de linhas das matrizes
-    li $a1, 4                       # Número de colunas das matrizes 
-    jal compara                     # Multiplica a matriz pelo vetor
+    li $a0, 3                       # Ordem da matriz
+    jal soma                        # Soma a diagonal secundária
 
     li $v0, 10                      # Código para finalizar o programa
     syscall                         # Finaliza o programa
@@ -123,7 +95,7 @@ leitura:    # leitura(a0 = Endereço, a1 = nLinhas, a2 = nColunas)
 
         blt $t0, $a1, l             # if(i < nlin): goto l
 
-        li $t0, 0                   # i = 0
+        li $t0, 0           # i = 0
         lw $ra, ($sp)               # Recupera o retorno para a main
         addi $sp, $sp, 4            # Libera o espaço na pilha
         move $v0, $a3               # Endereço base da matriz para retorno
@@ -166,67 +138,41 @@ escrita:    # escrita(a0 = Endereço, a1 = nLinhas, a2 = nColunas)
 
         jr $ra                      # Retorna para a main
 
-compara: # compara(a0 = nLinhas, a1 = nColunas)
+soma: # soma(a0 = ordem)
     subi $sp, $sp, 4                # Espaço para um item na pilha
     sw $ra, ($sp)                   # Salva o endereço de onde foi chamada a função
 
-    addi $s0, $zero, 0              # iguais = 0
-    addi $s1, $zero, 0              # total = 0
+    addi $s0, $zero, 0              # total = 0
+    move $s1, $a0                  # ordem
 
-    add $a2, $zero, $a1             # $a2 = nColunas
     addi $t2, $zero, 0              # i em nLinhas
+    subi $t3, $s1, 1                # j em nColunas
 
     linhas:
-        addi $t3, $zero, 0          # j em nColunas
+        move $t0, $t2               # $t0 = i
+        move $t1, $t3               # $t1 = j
+        la $a3, MatA                # $a3 = &MatA
+        jal indice                  # Calcula o endereço de Mat[i][j]
 
-        colunas:
-            move $t0, $t2           # $t0 = i
-            move $t1, $t3           # $t1 = j
-            la $a3, MatA            # $a3 = &MatA
-            jal indice              # Calcula o endereço de Mat[i][j]
+        lw $t4, ($v0)               # $t4 = Mat[i][j]
+        add $s0, $s0, $t4           # soma += Mat[i][j]
 
-            lw $t4, ($v0)           # $t4 = Mat[i][j]
-
-            move $t0, $t2           # $t0 = i
-            move $t1, $t3           # $t1 = j
-            la $a3, MatB            # $a3 = &MatB
-            jal indice              # Calcula o endereço de Mat[i][j]
-
-            lw $t5, ($v0)           # $t5 = Mat[i][j]
-
-            bne $t4, $t5, incrementa# if(MatA[i][j] != MatB[i][j]): goto incrementa
-
-            addi $s0, $s0, 1        # iguais++
-            add $s1, $s1, $t2       # total += i
-            add $s1, $s1, $t3       # total += j
-
-            incrementa:
-
-            addi $t3, $t3, 1        # j++
-            blt $t3, $a2, colunas   # if(j < nColunas): goto colunas
-
+        subi $t3, $t3, 1            #   j--
         addi $t2, $t2, 1            # i++
-        blt $t2, $a0, linhas        # if(i < nLinhas): goto linhas
+        blt $t2, $s1, linhas        # if(i < ordem): goto linhas
+
 
     # Imprime o resultado
-    la $a0, strIguais               # Carrega o endereço da string
+    la $a0, strSoma               # Carrega o endereço da string
     li $v0, 4                       # Código de impressão de string
     syscall                         # Imprime a string
 
-    move $a0, $s0                   # Carrega o número de iguais
+    move $a0, $s0                    # Carrega a soma
     li $v0, 1                       # Código de impressão de inteiros
     syscall                         # Imprime a string
 
-    la $a0, strSoma                 # Carrega o endereço da string
-    li $v0, 4                       # Código de impressão de string
-    syscall                         # Imprime a string
+    lw $ra, ($sp)               # Recupera o retorno para a main
+    addi $sp, $sp, 4            # Libera o espaço na pilha
+    move $v0, $a3               # Endereço base da matriz para retorno
 
-    move $a0, $s1                   # Carrega o número de iguais
-    li $v0, 1                       # Código de impressão de inteiros
-    syscall                         # Imprime a string
-
-    lw $ra, ($sp)                   # Recupera o retorno para a main
-    addi $sp, $sp, 4                # Libera o espaço na pilha
-    move $v0, $a3                   # Endereço base da matriz para retorno
-
-    jr $ra                          # Retorna para a main
+    jr $ra                      # Retorna para a main
