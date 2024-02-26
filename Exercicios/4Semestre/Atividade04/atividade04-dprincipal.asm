@@ -252,17 +252,17 @@ ordena: # ordena(a0 = ordem)
     subi $sp, $sp, 4                        # Espaço para um item na pilha
     sw $ra, ($sp)                           # Salva o endereço de onde foi chamada a função
     
-    move $s0, $a0                           # ordem
+    move $s0, $a0                           # $s0 = ordem
     
     # Vamos tratar a matriz como um vetor
     mul $s1, $s0, $s0                       # ordem * ordem
-    subi $s1, $s1, 1                        # tamanho = ordem * ordem - 1
+    subi $s1, $s1, 1                        # $s1 = tamanho = ordem * ordem - 1
     
-    li $t2, 0                               # i em tamanho
+    li $t2, 0                               # $t2 = i em tamanho
     
     loopOrdena:
-        li $t3, 0                           # j em tamanho
-        sub $s2, $s1, $t2                   # parada = tamanho - i
+        li $t3, 0                           # $t3 = j em tamanho
+        sub $s2, $s1, $t2                   # $s2 = parada = tamanho - i
 
         loopOrdena2:
             # Calcula matriz[0][j]
@@ -284,9 +284,9 @@ ordena: # ordena(a0 = ordem)
 
             ble $t4, $t6, continuaOrdena    # if(Mat[0][j] <= Mat[0][j + 1]): goto continuaOrdena
 
-            move $t6, $t4                   # temp = Mat[0][j]
+            move $s3, $t4                   # temp = Mat[0][j]
             sw $t6, ($t5)                   # &Mat[0][j] = Mat[0][j + 1]
-            sw $t6, ($t7)                   # &Mat[0][j + 1] = temp
+            sw $s3, ($t7)                   # &Mat[0][j + 1] = temp
             
             continuaOrdena:
             addi $t3, $t3, 1                # j++
