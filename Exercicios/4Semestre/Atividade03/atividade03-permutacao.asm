@@ -7,8 +7,8 @@
 Ent1: .asciiz "Insira o valor de Mat["
 Ent2: .asciiz "]["
 Ent3: .asciiz "]: "
-matInteira: .asciiz "Matriz inteira:\n"
-resultado: .asciiz "=>Resultado: "
+matInteira: .asciiz "\n=> Matriz lida:\n"
+resultado: .asciiz "\n=>Resultado: "
 strEhPermuta: .asciiz "É de permutação\n"
 strNaoehPermuta: .asciiz "Não é de permutação\n"
 
