@@ -250,9 +250,9 @@ somaPosicaoPares:  # somaPares(a0 = Endereco, a1 = nElementos)
         lw $t5, ($v0)               # $t5 = valor lido em indice
         add $t4, $t4, $t5           # soma += valor
 
-        addi $t0, $t0, 2            # i += 2
+        addi $t1, $t1, 2            # j += 2
 
-        blt $t0, $t3, loopSomaPar   # if(i < nElementos): goto loopSomaPar       
+        blt $t1, $t3, loopSomaPar   # if(j < nElementos): goto loopSomaPar       
 
     lw $ra, ($sp)                   # Recupera o retorno para a main
     addi $sp, $sp, 4                # Libera o espaço na pilha
