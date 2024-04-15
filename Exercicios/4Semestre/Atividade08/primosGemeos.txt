@@ -1,0 +1,10 @@
+Números primos gêmeos de 1 até 100:
+
+[3] é primo gêmeo, pois 5 também é primo
+[5] é primo gêmeo, pois 7 também é primo
+[11] é primo gêmeo, pois 13 também é primo
+[17] é primo gêmeo, pois 19 também é primo
+[29] é primo gêmeo, pois 31 também é primo
+[41] é primo gêmeo, pois 43 também é primo
+[59] é primo gêmeo, pois 61 também é primo
+[71] é primo gêmeo, pois 73 também é primo
