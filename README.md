@@ -1,6 +1,6 @@
 # Assembly MIPS 
 
-Repositório destinado para os códigos Assembly em MIPS, utilizados na matéria de Arquitetura de Computadores I e II.
+Repositório destinado para os códigos Assembly em MIPS, criados nas matérias de Arquitetura de Computadores I e II, ministradas pelo prof° Fábio Martins.
 
 ## Conteúdo
 
@@ -9,3 +9,7 @@ Repositório destinado para os códigos Assembly em MIPS, utilizados na matéria
     - 3Semestre
     - 4Semestre
     - 6Semestre (durante a disciplina de Compiladores II)
+
+## Simuladores
+
+Utilizando o simulador [**Mars**](https://github.com/dpetersanderson/MARS) para testes.
